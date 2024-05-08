@@ -1985,15 +1985,22 @@ end
 
             function tab:AddSection(text, side, order)
                 local section = {
-                    text = tostring(text);
-                    side = side == nil and 1 or clamp(side,1,2);
-                    order = order or #self.sections+1;
-                    enabled = true;
-                    objects = {};
-                    options = {};
-                };
-
-                table.insert(self.sections, section);
+                    text = tostring(text),
+                    side = side == nil and 1 or clamp(side, 1, 2),
+                    order = order or #self.sections + 1,
+                    enabled = true,
+                    objects = {},
+                    options = {}
+                }
+            
+                table.insert(self.sections, section)
+            
+                -- Trier les sections en fonction de l'ordre
+                table.sort(self.sections, function(a, b)
+                    return a.order < b.order
+                end)
+            end
+            
 
                 --- Create Objects ---
                 do
