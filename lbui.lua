@@ -684,7 +684,6 @@ function library:init()
         end
         local encodedCfg = http:JSONEncode(cfg)
         writefile(self.cheatname..'/'..self.gamename..'/configs/'..name..self.fileext, encodedCfg)
-        -- Add print statement to check the content of encodedCfg
         print("Config data:", encodedCfg)
     end)
 
