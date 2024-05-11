@@ -655,44 +655,42 @@ function library:init()
     end
 
     function self:SaveConfig(name)
-    if not self:GetConfig(name) then
-        self:SendNotification('Error saving config: Config does not exist. ('..tostring(name)..')', 5, c3new(1,0,0));
-        return
-    end
-
-    local s,e = pcall(function()
-        local cfg = {};
-        for flag,option in next, self.options do
-            if option.class == 'toggle' then
-                cfg[flag] = option.state and 1 or 0;
-            elseif option.class == 'slider' then
-                cfg[flag] = option.value;
-            elseif option.class == 'bind' then
-                cfg[flag] = option.bind.Name;
-            elseif option.class == 'color' then
-                cfg[flag] = {
-                    option.color.r,
-                    option.color.g,
-                    option.color.b,
-                    option.trans,
-                }
-            elseif option.class == 'list' then
-                cfg[flag] = option.selected;
-            elseif option.class == 'box' then
-                cfg[flag] = option.input
-            end
+        if not self:GetConfig(name) then
+            self:SendNotification('Error saving config: Config does not exist. ('..tostring(name)..')', 5, c3new(1,0,0));
+            return
         end
-        local encodedCfg = http:JSONEncode(cfg)
-        writefile(self.cheatname..'/'..self.gamename..'/configs/'..name..self.fileext, encodedCfg)
-        print("Config data:", encodedCfg)
-    end)
 
-    if s then
-        self:SendNotification('Successfully saved config: '..name, 5, c3new(0,1,0));
-    else
-        self:SendNotification('Error saving config: '..tostring(e)..'. ('..tostring(name)..')', 5, c3new(1,0,0));
+        local s,e = pcall(function()
+            local cfg = {};
+            for flag,option in next, self.options do
+                if option.class == 'toggle' then
+                    cfg[flag] = option.state and 1 or 0;
+                elseif option.class == 'slider' then
+                    cfg[flag] = option.value;
+                elseif option.class == 'bind' then
+                    cfg[flag] = option.bind.Name;
+                elseif option.class == 'color' then
+                    cfg[flag] = {
+                        option.color.r,
+                        option.color.g,
+                        option.color.b,
+                        option.trans,
+                    }
+                elseif option.class == 'list' then
+                    cfg[flag] = option.selected;
+                elseif option.class == 'box' then
+                    cfg[flag] = option.input
+                end
+            end
+            writefile(self.cheatname..'/'..self.gamename..'/configs/'..name..self.fileext, http:JSONEncode(cfg));
+        end)
+
+        if s then
+            self:SendNotification('Successfully saved config: '..name, 5, c3new(0,1,0));
+        else
+            self:SendNotification('Error saving config: '..tostring(e)..'. ('..tostring(name)..')', 5, c3new(1,0,0));
+        end
     end
-end
 
     for i,v in next, self.images do
         if not isfile(self.cheatname..'/assets/'..i..'.oh') then
@@ -1985,22 +1983,15 @@ end
 
             function tab:AddSection(text, side, order)
                 local section = {
-                    text = tostring(text),
-                    side = side == nil and 1 or clamp(side, 1, 2),
-                    order = order or #self.sections + 1,
-                    enabled = true,
-                    objects = {},
-                    options = {}
-                }
-            
-                table.insert(self.sections, section)
-            
-                -- Trier les sections en fonction de l'ordre
-                table.sort(self.sections, function(a, b)
-                    return a.order < b.order
-                end)
-            end
-            
+                    text = tostring(text);
+                    side = side == nil and 1 or clamp(side,1,2);
+                    order = order or #self.sections+1;
+                    enabled = true;
+                    objects = {};
+                    options = {};
+                };
+
+                table.insert(self.sections, section);
 
                 --- Create Objects ---
                 do
@@ -4754,7 +4745,7 @@ function library:CreateSettingsTab(menu)
 
     mainSection:AddButton({text = 'Join Discord', flag = 'joindiscord', confirm = true, callback = function()
         local res = syn.request({
-            Url = 'https://discord.gg/D4abhz8g',
+            Url = 'https://discord.gg/QxZERyzrw2',
             Method = 'POST',
             Headers = {
                 ['Content-Type'] = 'application/json',
